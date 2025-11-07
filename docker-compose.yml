@@ -1,0 +1,29 @@
+services:
+  pgadmin:
+    image: dpage/pgadmin4:9.9.0
+    container_name: pgadmin
+    restart: always
+    # environment:
+    #  PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-change-me-immediately@example.com}
+    #  PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    secrets:
+      - PGADMIN_DEFAULT_EMAIL
+      - PGADMIN_DEFAULT_PASSWORD
+    entrypoint: 
+      ["/bin/sh","-c",
+      "export PGADMIN_DEFAULT_EMAIL=$(cat /run/secrets/PGADMIN_DEFAULT_EMAIL); 
+       export PGADMIN_DEFAULT_PASSWORD=$(cat /run/secrets/PGADMIN_DEFAULT_PASSWORD); 
+      exec /entrypoint.sh"]
+    volumes:
+      - pgadmindata:/var/lib/pgadmin  
+    ports:
+      - "16544:80"
+
+volumes:
+  pgadmindata:
+  
+secrets:
+  PGADMIN_DEFAULT_PASSWORD:
+    file: ./secrets/PGADMIN_DEFAULT_PASSWORD
+  PGADMIN_DEFAULT_EMAIL:
+    file: ./secrets/PGADMIN_DEFAULT_EMAIL
