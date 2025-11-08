@@ -9,18 +9,27 @@ services:
     secrets:
       - PGADMIN_DEFAULT_EMAIL
       - PGADMIN_DEFAULT_PASSWORD
-    entrypoint: 
+    entrypoint:
       ["/bin/sh","-c",
-      "export PGADMIN_DEFAULT_EMAIL=$(cat /run/secrets/PGADMIN_DEFAULT_EMAIL); 
-       export PGADMIN_DEFAULT_PASSWORD=$(cat /run/secrets/PGADMIN_DEFAULT_PASSWORD); 
+      "export PGADMIN_DEFAULT_EMAIL=$(cat /run/secrets/PGADMIN_DEFAULT_EMAIL);
+       export PGADMIN_DEFAULT_PASSWORD=$(cat /run/secrets/PGADMIN_DEFAULT_PASSWORD);
       exec /entrypoint.sh"]
     volumes:
-      - pgadmindata:/var/lib/pgadmin  
+      - pgadmindata:/var/lib/pgadmin
     ports:
       - "16544:80"
+    networks:
+      - web
+      - db_net
 
 volumes:
   pgadmindata:
+  
+networks:
+  web:
+    external: true
+  db_net:
+    external: true
   
 secrets:
   PGADMIN_DEFAULT_PASSWORD:
